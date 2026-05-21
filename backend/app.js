@@ -12,4 +12,4 @@ app.get('/projectspecs', (req, res) => {
     }); 
 });  
 
-module.exports = app; 
+export default app; 
