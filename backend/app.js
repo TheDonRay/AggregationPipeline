@@ -8,7 +8,9 @@ app.use(express.json()); // for middleware
 
 app.get('/projectspecs', (req, res) => { 
     res.json({ 
-        Specs: "Welcome to AGTPipeline. This project is designed to help me learn about aggregation pipeline and create a cool dashboard based of the pipeline"
+        Specs: "This project is designed to help me understand what aggregation pipelines are and how we can use them for AI analysis and dashboard representation", 
+        Author: "Rayat Chowdhury", 
+        Date: '5/20/2026'
     }); 
 });  
 
