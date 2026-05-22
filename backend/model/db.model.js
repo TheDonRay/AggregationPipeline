@@ -1,31 +1,29 @@
-import {mongoose} from 'mongoose'; 
+import mongoose from 'mongoose';
 
-const userDataSchema = new mongoose.Schema([ 
-    { 
-        name: { 
-            type: String, 
-        }, 
+const userDataSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String 
+        },
         email: { 
             type: String, 
-            required: true, 
-        }, 
-        age: { 
-            type: Number
-        }, 
+            required: true 
+        },
+        age: {
+            type: Number 
+        },
         profession: { 
-            type: String, 
-        }, 
+            type: String 
+        },
         isActive: { 
-            type: boolean
-        }, 
-        martialStatus: { 
-            type: String,
+            type: Boolean 
+        },
+        maritalStatus: { 
+            type: String 
         }
-    }, 
-    {
-        timestamps: true
-    }
-]); 
+    },
+    { timestamps: true }
+);
 
-const UserData = mongoose.model('UserData', userDataSchema); 
-export default userDataSchema; 
+const UserData = mongoose.model('UserData', userDataSchema);
+export default UserData;

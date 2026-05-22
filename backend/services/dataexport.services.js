@@ -1,4 +1,6 @@
-export const UserData = [
+import UserData from '../model/db.model.js';
+
+export const UserseedData = [
   {
     name: "John",
     email: "johncarry2005@gmail.com",
@@ -159,4 +161,15 @@ export const UserData = [
     isActive: true,
     maritalStatus: "single"
   }
-]
+]; 
+
+export const insertSeedData = async () => { 
+  try {  
+    if (await UserData.countDocuments() === 0) {
+      await UserData.insertMany(UserseedData);   
+      console.log('Seed data successfully inserted'); 
+    }
+  } catch (error) { 
+    console.log('Error inserting seed data into model'); 
+  }
+}; 
