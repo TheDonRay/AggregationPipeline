@@ -1,9 +1,9 @@
-import {mongoose} from 'mongoose'; 
+import mongoose from 'mongoose';
 const URI = process.env.DBURI;  
 
 const dbconnection = async () => { 
     try { 
-        await mongoose.connection(URI);  
+        await mongoose.connect(URI); 
         console.log('Connection Successful'); 
     } catch (error) { 
         console.log('Error connecting to database', error); 
