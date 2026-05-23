@@ -5,9 +5,11 @@ app.use(express.json()); // for middleware
  
 //import routes 
 import getUserData from './routes/userData.route.js'; 
+import aggregationroute from './routes/aggregations.route.js'; 
 
 // mount the route here as such 
 app.use('/api/v1/', getUserData); 
+app.use('/api/v1/', aggregationroute); 
 
 app.get('/projectspecs', (req, res) => { 
     res.json({ 
