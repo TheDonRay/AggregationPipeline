@@ -6,6 +6,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  id-token: write
 
 jobs:
   review:
@@ -16,11 +17,11 @@ jobs:
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.AUTOMATED_PRS }}
-          prompt: |
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          direct_prompt: |
             Review this PR thoroughly. Check for:
             - bugs and logic errors
             - missing error handling
             - security issues
             - code style and consistency
             Leave inline comments on GitHub for any issues you find.
-            If everything looks good, approve the PR. 
