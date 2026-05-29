@@ -8,77 +8,113 @@ import UsersTable from './components/UsersTable';
 function App() {
   const { data, loading, error } = useAggregations();
 
-  const avgAge = data.avgAge?.AggregationResult?.[0]?.AverageAge?.toFixed(1) ?? '—';
+  const avgAge      = data.avgAge?.AggregationResult?.[0]?.AverageAge?.toFixed(1) ?? '—';
   const engineerCount = data.engineers?.AggregationResult?.[0]?.['number of Engineers'] ?? '—';
-  const totalUsers = data.users?.length ?? '—';
+  const totalUsers  = data.users?.length ?? '—';
   const activeCount = data.activeStatus?.AggregationResult?.find((d) => d._id === true)?.count ?? '—';
-  const activePercent = totalUsers !== '—' && activeCount !== '—'
-    ? `${Math.round((activeCount / totalUsers) * 100)}%`
-    : '60%';
+  const activePercent =
+    totalUsers !== '—' && activeCount !== '—'
+      ? Math.round((activeCount / totalUsers) * 100)
+      : 60;
+
+  if (loading) {
+    return (
+      <div className="loading-screen">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+          <div className="spinner" />
+          <p style={{ fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--text-3)', fontFamily: "'IBM Plex Mono', monospace" }}>
+            Initializing
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-screen">
+        <div className="card" style={{ padding: '28px 36px', textAlign: 'center', maxWidth: 400 }}>
+          <div style={{ fontSize: 28, fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '0.1em', color: 'var(--steel)', marginBottom: 10 }}>
+            Connection Failed
+          </div>
+          <p style={{ fontSize: 12, color: 'var(--text-3)', fontFamily: "'IBM Plex Mono', monospace", lineHeight: 1.6 }}>
+            Backend not reachable — ensure the server is running on port 8999.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', height: '100vh', background: '#04040a' }}>
-
+    <div className="dashboard">
       {/* ── Header ── */}
-      <header style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '0 28px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <header className="dashboard-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 30, height: 30, borderRadius: 8, background: 'linear-gradient(135deg,#8b5cf6,#ec4899)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 13, color: '#fff', boxShadow: '0 0 16px rgba(139,92,246,0.5)' }}>A</div>
-          <span style={{ color: '#fff', fontWeight: 700, fontSize: 15, letterSpacing: '-0.3px' }}>AggregationPipeline</span>
-          <span style={{ background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.3)', color: '#a78bfa', fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 99, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Dashboard</span>
+          <div className="header-logo-mark">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <rect x="1" y="1" width="5" height="5" rx="1" fill="var(--steel)" opacity="0.9" />
+              <rect x="8" y="1" width="5" height="5" rx="1" fill="var(--steel)" opacity="0.5" />
+              <rect x="1" y="8" width="5" height="5" rx="1" fill="var(--steel)" opacity="0.5" />
+              <rect x="8" y="8" width="5" height="5" rx="1" fill="var(--steel)" opacity="0.25" />
+            </svg>
+          </div>
+          <div className="header-divider" />
+          <span style={{ fontFamily: "'Barlow Semi Condensed', sans-serif", fontWeight: 600, fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-1)' }}>
+            Aggregation Pipeline
+          </span>
+          <span style={{ display: 'none', fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: 'var(--text-3)', background: 'var(--s3)', border: '1px solid var(--rim-2)', padding: '2px 8px', borderRadius: 4, letterSpacing: '0.05em' }}
+            className="sm-show"
+          >
+            Analytics
+          </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <span style={{ color: '#334155', fontSize: 12, fontFamily: 'monospace' }}>mongodb://localhost</span>
-          <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#34d399', boxShadow: '0 0 8px rgba(52,211,153,0.8)' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: 'var(--text-3)', display: 'none' }}
+            className="md-show"
+          >
+            mongodb://localhost:27017
+          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+            <div className="conn-dot" />
+            <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--steel)', fontFamily: "'Barlow Semi Condensed', sans-serif" }}>
+              Live
+            </span>
+          </div>
         </div>
       </header>
 
-      {/* ── Main grid ── */}
-      <main style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gridTemplateRows: '1fr 1fr 1.6fr', gap: 16, padding: 16, overflow: 'hidden' }}>
-
-        {loading && (
-          <div style={{ gridColumn: '1/-1', gridRow: '1/-1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div className="w-10 h-10 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
+      {/* ── Main ── */}
+      <main className="dashboard-main">
+        {/* Stats */}
+        <div className="stats-grid">
+          <div className="anim-1">
+            <StatCard title="Total Users"   value={totalUsers}    subtitle="documents in collection" icon="USR" trend={78} />
           </div>
-        )}
-
-        {error && (
-          <div style={{ gridColumn: '1/-1', gridRow: '1/-1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.08)', borderRadius: 16, padding: '24px 32px', color: '#f87171', fontSize: 14 }}>
-              Backend not reachable — make sure the server is running on port 8999.
-            </div>
+          <div className="anim-2">
+            <StatCard title="Average Age"   value={avgAge}        subtitle="mean across all users"   icon="AGE" unit="yrs" trend={52} />
           </div>
-        )}
+          <div className="anim-3">
+            <StatCard title="Active Users"  value={activeCount}   subtitle="currently active"        icon="ACT" trend={activePercent} />
+          </div>
+          <div className="anim-4">
+            <StatCard title="Engineers"     value={engineerCount} subtitle="matched profession"       icon="ENG" trend={34} />
+          </div>
+        </div>
 
-        {!loading && !error && (
-          <>
-            {/* Row 1 — stat cards */}
-            <div style={{ gridColumn: 1, gridRow: 1 }}>
-              <StatCard title="Total Users" value={totalUsers} subtitle="documents in collection" icon="USR" color="violet" trend="100%" />
-            </div>
-            <div style={{ gridColumn: 2, gridRow: 1 }}>
-              <StatCard title="Average Age" value={avgAge} subtitle="mean across all users" icon="AGE" color="cyan" trend="55%" />
-            </div>
-            <div style={{ gridColumn: 3, gridRow: 1 }}>
-              <StatCard title="Active Users" value={activeCount} subtitle="currently active" icon="ACT" color="emerald" trend={activePercent} />
-            </div>
-            <div style={{ gridColumn: 4, gridRow: 1 }}>
-              <StatCard title="Engineers" value={engineerCount} subtitle="matched profession" icon="ENG" color="pink" trend="10%" />
-            </div>
+        {/* Charts */}
+        <div className="charts-grid">
+          <div className="anim-5">
+            <ActiveStatusChart data={data.activeStatus} />
+          </div>
+          <div className="anim-6">
+            <MaritalStatusChart data={data.maritalStatus} />
+          </div>
+        </div>
 
-            {/* Row 2 — charts */}
-            <div style={{ gridColumn: '1 / 3', gridRow: 2 }}>
-              <ActiveStatusChart data={data.activeStatus} />
-            </div>
-            <div style={{ gridColumn: '3 / 5', gridRow: 2 }}>
-              <MaritalStatusChart data={data.maritalStatus} />
-            </div>
-
-            {/* Row 3 — table */}
-            <div style={{ gridColumn: '1 / -1', gridRow: 3, overflow: 'hidden' }}>
-              <UsersTable users={data.users} />
-            </div>
-          </>
-        )}
+        {/* Table */}
+        <div className="table-section anim-7">
+          <UsersTable users={data.users} />
+        </div>
       </main>
     </div>
   );
