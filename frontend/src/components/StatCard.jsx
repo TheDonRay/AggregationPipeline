@@ -1,56 +1,60 @@
-const themes = {
-  violet: {
-    border: 'border-violet-500/30',
-    glow: 'glow-violet',
-    gradient: 'from-violet-500/20 via-violet-500/5 to-transparent',
-    bar: 'bg-violet-500',
-    text: 'text-violet-400',
-    badge: 'bg-violet-500/10 text-violet-300',
-  },
-  pink: {
-    border: 'border-pink-500/30',
-    glow: 'glow-pink',
-    gradient: 'from-pink-500/20 via-pink-500/5 to-transparent',
-    bar: 'bg-pink-500',
-    text: 'text-pink-400',
-    badge: 'bg-pink-500/10 text-pink-300',
-  },
-  cyan: {
-    border: 'border-cyan-500/30',
-    glow: 'glow-cyan',
-    gradient: 'from-cyan-500/20 via-cyan-500/5 to-transparent',
-    bar: 'bg-cyan-500',
-    text: 'text-cyan-400',
-    badge: 'bg-cyan-500/10 text-cyan-300',
-  },
-  emerald: {
-    border: 'border-emerald-500/30',
-    glow: 'glow-emerald',
-    gradient: 'from-emerald-500/20 via-emerald-500/5 to-transparent',
-    bar: 'bg-emerald-500',
-    text: 'text-emerald-400',
-    badge: 'bg-emerald-500/10 text-emerald-300',
-  },
+const ICONS = {
+  USR: (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <circle cx="7" cy="4.5" r="2.5" fill="var(--steel)" opacity="0.9" />
+      <path d="M1.5 12c0-3.038 2.462-5.5 5.5-5.5s5.5 2.462 5.5 5.5" stroke="var(--steel)" strokeWidth="1.3" strokeLinecap="round" opacity="0.6" />
+    </svg>
+  ),
+  AGE: (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <circle cx="7" cy="7" r="5.5" stroke="var(--steel)" strokeWidth="1.3" opacity="0.6" />
+      <path d="M7 4v3.5l2 1.5" stroke="var(--steel)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
+    </svg>
+  ),
+  ACT: (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <polyline points="1,9 4,5 6,8 9,3 13,7" stroke="var(--steel)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
+    </svg>
+  ),
+  ENG: (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <circle cx="7" cy="7" r="2" fill="var(--steel)" opacity="0.9" />
+      <path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.93 2.93l1.41 1.41M9.66 9.66l1.41 1.41M2.93 11.07l1.41-1.41M9.66 4.34l1.41-1.41" stroke="var(--steel)" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+    </svg>
+  ),
 };
 
-const StatCard = ({ title, value, subtitle, icon, color = 'violet', trend }) => {
-  const t = themes[color];
-  return (
-    <div className={`relative overflow-hidden rounded-2xl border ${t.border} bg-white/[0.03] ${t.glow} p-5 flex flex-col justify-between h-full`}>
-      <div className={`absolute inset-0 bg-gradient-to-br ${t.gradient} pointer-events-none`} />
-      <div className="relative flex items-start justify-between mb-4">
-        <span className={`text-xs font-semibold uppercase tracking-[0.2em] ${t.text}`}>{title}</span>
-        <span className={`text-xs px-2 py-0.5 rounded-full font-mono ${t.badge}`}>{icon}</span>
+const StatCard = ({ title, value, subtitle, icon, unit, trend = 60 }) => (
+  <div className="card" style={{ padding: '18px 20px', display: 'flex', flexDirection: 'column', gap: 14, height: '100%' }}>
+    {/* Top row */}
+    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+      <span className="stat-label">{title}</span>
+      <div className="stat-icon">{ICONS[icon]}</div>
+    </div>
+
+    {/* Value */}
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+      <span className="stat-value">{value}</span>
+      {unit && (
+        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: 'var(--text-3)', letterSpacing: '0.05em', paddingBottom: 4 }}>
+          {unit}
+        </span>
+      )}
+    </div>
+
+    {/* Bottom */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 'auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span className="stat-sub">{subtitle}</span>
+        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: 'var(--steel)', letterSpacing: '0.05em' }}>
+          {trend}%
+        </span>
       </div>
-      <div className="relative">
-        <p className="text-5xl font-black text-white tabular-nums leading-none">{value}</p>
-        <p className="mt-2 text-xs text-slate-500">{subtitle}</p>
-      </div>
-      <div className={`relative mt-4 h-0.5 w-full rounded-full bg-white/5`}>
-        <div className={`h-full rounded-full ${t.bar}`} style={{ width: trend ?? '60%' }} />
+      <div className="progress-track">
+        <div className="progress-fill" style={{ width: `${trend}%` }} />
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 export default StatCard;

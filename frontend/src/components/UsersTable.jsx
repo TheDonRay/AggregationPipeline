@@ -1,34 +1,85 @@
+const COLUMNS = ['Name', 'Email', 'Age', 'Profession', 'Status', 'Marital'];
+
 const UsersTable = ({ users }) => (
-  <div className="rounded-2xl border border-cyan-500/20 bg-white/[0.03] glow-cyan flex flex-col h-full overflow-hidden">
-    <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">User Directory</p>
-      <span className="text-xs font-mono bg-cyan-500/10 text-cyan-300 px-2.5 py-1 rounded-full">{users?.length ?? 0} records</span>
+  <div className="card" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+    {/* Table header bar */}
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderBottom: '1px solid var(--rim-1)', flexShrink: 0 }}>
+      <span className="chart-label">User Directory</span>
+      <span style={{
+        fontFamily: "'IBM Plex Mono', monospace",
+        fontSize: 10,
+        color: 'var(--steel)',
+        background: 'var(--s3)',
+        border: '1px solid var(--rim-2)',
+        padding: '3px 10px',
+        borderRadius: 99,
+        letterSpacing: '0.06em',
+      }}>
+        {users?.length ?? 0} records
+      </span>
     </div>
-    <div className="overflow-y-auto flex-1">
-      <table className="w-full text-sm">
-        <thead className="sticky top-0 bg-[#06060f] z-10">
-          <tr className="border-b border-white/5">
-            {['Name', 'Email', 'Age', 'Profession', 'Status', 'Marital'].map((h) => (
-              <th key={h} className="px-6 py-3 text-left text-[10px] font-bold text-slate-600 uppercase tracking-[0.15em]">
-                {h}
-              </th>
-            ))}
+
+    {/* Scrollable body */}
+    <div style={{ flex: 1, overflowY: 'auto', overflowX: 'auto' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 560 }}>
+        <thead style={{ position: 'sticky', top: 0, zIndex: 10, background: 'var(--s0)' }}>
+          <tr className="table-header-row" style={{ borderBottom: '1px solid var(--rim-1)' }}>
+            {COLUMNS.map((h) => <th key={h}>{h}</th>)}
           </tr>
         </thead>
         <tbody>
           {users?.map((u, i) => (
-            <tr key={i} className="border-b border-white/[0.03] hover:bg-white/[0.03] transition-colors group">
-              <td className="px-6 py-3 font-semibold text-white group-hover:text-violet-300 transition-colors">{u.name}</td>
-              <td className="px-6 py-3 text-slate-500 font-mono text-xs">{u.email}</td>
-              <td className="px-6 py-3 text-slate-400 font-mono">{u.age}</td>
-              <td className="px-6 py-3 text-slate-400">{u.profession}</td>
-              <td className="px-6 py-3">
-                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold ${u.isActive ? 'bg-violet-500/15 text-violet-300 border border-violet-500/20' : 'bg-white/5 text-slate-500 border border-white/5'}`}>
-                  <span className={`w-1.5 h-1.5 rounded-full ${u.isActive ? 'bg-violet-400 shadow-[0_0_6px_rgba(167,139,250,0.8)]' : 'bg-slate-600'}`} />
+            <tr key={i} className="table-row">
+              {/* Name */}
+              <td style={{ paddingLeft: 18, paddingRight: 18 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 8,
+                    background: 'var(--s3)',
+                    border: '1px solid var(--rim-2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: 'var(--steel)',
+                    flexShrink: 0,
+                    fontFamily: "'Barlow Semi Condensed', sans-serif",
+                    letterSpacing: '0.05em',
+                  }}>
+                    {u.name?.charAt(0).toUpperCase() ?? '?'}
+                  </div>
+                  <span style={{ fontWeight: 600, color: 'var(--text-1)', fontSize: 13, whiteSpace: 'nowrap' }}>{u.name}</span>
+                </div>
+              </td>
+
+              {/* Email */}
+              <td style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: 'var(--text-3)', paddingLeft: 18, paddingRight: 18 }}>
+                {u.email}
+              </td>
+
+              {/* Age */}
+              <td style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: 'var(--text-2)', paddingLeft: 18, paddingRight: 18 }}>
+                {u.age}
+              </td>
+
+              {/* Profession */}
+              <td style={{ fontSize: 12, color: 'var(--text-2)', paddingLeft: 18, paddingRight: 18 }}>{u.profession}</td>
+
+              {/* Status badge */}
+              <td style={{ paddingLeft: 18, paddingRight: 18 }}>
+                <span className={u.isActive ? 'badge-active' : 'badge-inactive'}>
+                  <span className={u.isActive ? 'dot-active' : 'dot-inactive'} />
                   {u.isActive ? 'Active' : 'Inactive'}
                 </span>
               </td>
-              <td className="px-6 py-3 text-slate-400 capitalize">{u.maritalStatus}</td>
+
+              {/* Marital */}
+              <td style={{ fontSize: 12, color: 'var(--text-3)', textTransform: 'capitalize', paddingLeft: 18, paddingRight: 18 }}>
+                {u.maritalStatus}
+              </td>
             </tr>
           ))}
         </tbody>

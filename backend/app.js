@@ -1,7 +1,9 @@
-import express from 'express'; 
-const app = express(); 
+import express from 'express';
+import cors from 'cors';
+const app = express();
 
-app.use(express.json()); // for middleware 
+app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:5174'] }));
+app.use(express.json());
  
 //import routes 
 import getUserData from './routes/userData.route.js'; 
